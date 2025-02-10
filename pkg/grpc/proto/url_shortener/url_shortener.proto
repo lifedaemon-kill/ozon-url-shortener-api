@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package url_shortener;
+
+option go_package = "ozon-lfd-url_shortener.v1;url_shortener_api";
+
+service URLService {
+  rpc SaveURL(SaveURLRequest) returns (SaveURLResponse);
+  rpc FetchURL(FetchURLRequest) returns (FetchURLResponse);
+}
+
+message SaveURLRequest {
+  string source_URL = 1;
+}
+
+message SaveURLResponse{
+  string alias_URL = 2;
+}
+
+message FetchURLRequest {
+  string alias_URL = 1;
+}
+
+message FetchURLResponse {
+  string source_URL = 1;
+}
