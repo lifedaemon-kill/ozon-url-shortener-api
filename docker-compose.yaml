@@ -1,0 +1,25 @@
+services:
+  app:
+    build: ./
+    ports:
+      - "8080:8080"
+      - "8090:8090"
+
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_DSN="host=localhost port=5432 user=postgres password=postgres dbname=ush_db sslmode=disable" #EXAMPLE
+
+  db:
+    image: postgres:latest
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=ush_db
+      - POSTGRES_USER=postgres    #EXAMPLE
+      - POSTGRES_PASSWORD=postgres   #EXAMPLE
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata: {}
