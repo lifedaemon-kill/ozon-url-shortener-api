@@ -8,8 +8,6 @@ services:
 
     depends_on:
       - db
-    environment:
-      - POSTGRES_DSN="host=db port=6543 user=ozon password=root dbname=ush_db sslmode=disable"
 
   db:
     image: postgres:latest

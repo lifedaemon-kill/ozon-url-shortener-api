@@ -8,6 +8,8 @@ import (
 	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/server/http_server"
 	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/service"
 	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/storage"
+	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/storage/inmemory"
+	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/storage/postgres"
 	"net/http"
 	"os"
 	"os/signal"
@@ -31,14 +33,14 @@ func main() {
 
 	switch storageType {
 	case lib.Postgres:
-		repo, err = storage.NewPostgres(conf.DB)
+		repo, err = postgres.New(conf.DB)
 		if err != nil {
 			log.Error("ошибка при подключении к postgres", "err", err, "conf", conf.DB)
 			return
 		}
 		log.Info("repository created", "type", lib.Postgres)
 	case lib.InMemory:
-		repo = storage.NewInMemory()
+		repo = inmemory.New()
 	default:
 		log.Error("unknown storage type", "storageType", storageType, "expected", lib.Postgres+" or "+lib.InMemory)
 		log.Info("repository created", "type", lib.InMemory)

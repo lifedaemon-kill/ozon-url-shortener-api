@@ -12,7 +12,7 @@ type Config struct {
 	GRPC              GRPCServer   `yaml:"grpc_server" env-required:"true"`
 	ShortLinksAddress string       `yaml:"short_links_address" env-required:"true"`
 	URLGenerator      URLGenerator `yaml:"url_generator" env-required:"true"`
-	DB                DB
+	DB                DB           `yaml:"db" env-required:"true"`
 }
 
 func Load(configPath string) *Config {
@@ -30,16 +30,12 @@ func Load(configPath string) *Config {
 		log.Fatal(err)
 	}
 
-	dsn := os.Getenv("POSTGRES_DSN")
-
-	cfg.DB.DSN = dsn
-
 	return &cfg
 
 }
 
 type DB struct {
-	DSN string
+	DSN string `yaml:"dsn" env-required:"true"`
 }
 type HttpServer struct {
 	Address string `yaml:"address" env-required:"true"`
