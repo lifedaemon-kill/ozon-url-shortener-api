@@ -1,12 +1,15 @@
-package storage
+package inmemory
 
-import "github.com/lifedaemon-kill/ozon-url-shortener-api/internal/pkg/internal_errors"
+import (
+	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/pkg/internal_errors"
+	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/storage"
+)
 
 type inMemoryStorage struct {
 	db map[string]string
 }
 
-func NewInMemory() Storage {
+func New() storage.Storage {
 	db := make(map[string]string)
 	return &inMemoryStorage{
 		db: db,
