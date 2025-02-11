@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	URLService_SaveURL_FullMethodName  = "/url_shortener.URLService/SaveURL"
+	URLService_SaveURL_FullMethodName  = "/url_shortener.URLService/CreateAliasURL"
 	URLService_FetchURL_FullMethodName = "/url_shortener.URLService/FetchURL"
 )
 
@@ -76,7 +76,7 @@ type URLServiceServer interface {
 type UnimplementedURLServiceServer struct{}
 
 func (UnimplementedURLServiceServer) SaveURL(context.Context, *SaveURLRequest) (*SaveURLResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SaveURL not implemented")
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAliasURL not implemented")
 }
 func (UnimplementedURLServiceServer) FetchURL(context.Context, *FetchURLRequest) (*FetchURLResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FetchURL not implemented")
@@ -146,7 +146,7 @@ var URLService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*URLServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SaveURL",
+			MethodName: "CreateAliasURL",
 			Handler:    _URLService_SaveURL_Handler,
 		},
 		{

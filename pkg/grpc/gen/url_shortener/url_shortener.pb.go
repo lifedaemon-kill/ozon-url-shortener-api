@@ -251,9 +251,9 @@ var file_url_shortener_url_shortener_proto_goTypes = []any{
 	(*FetchURLResponse)(nil), // 3: url_shortener.FetchURLResponse
 }
 var file_url_shortener_url_shortener_proto_depIdxs = []int32{
-	0, // 0: url_shortener.URLService.SaveURL:input_type -> url_shortener.SaveURLRequest
+	0, // 0: url_shortener.URLService.CreateAliasURL:input_type -> url_shortener.SaveURLRequest
 	2, // 1: url_shortener.URLService.FetchURL:input_type -> url_shortener.FetchURLRequest
-	1, // 2: url_shortener.URLService.SaveURL:output_type -> url_shortener.SaveURLResponse
+	1, // 2: url_shortener.URLService.CreateAliasURL:output_type -> url_shortener.SaveURLResponse
 	3, // 3: url_shortener.URLService.FetchURL:output_type -> url_shortener.FetchURLResponse
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type
