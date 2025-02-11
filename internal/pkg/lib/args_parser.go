@@ -16,6 +16,9 @@ const (
 //
 // В случае если тэга -s нет, по умолчанию возвращает Postgres
 func ParseStorageType(args []string) (storageType string, err error) {
+	if len(args) < 2 {
+		return Postgres, nil
+	}
 	for i := range args[:len(args)-1] {
 		if args[i] == "-s" {
 			switch args[i+1] {

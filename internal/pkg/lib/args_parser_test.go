@@ -10,6 +10,8 @@ import (
 
 func TestParseStorageTypeCorrect(t *testing.T) {
 	args := [][]string{
+		{},
+		{"mmm"},
 		{"-s", "postgres"},
 		{"-d", "h"},
 		{"-d", "hello", "-s", "postgres"},
@@ -17,6 +19,8 @@ func TestParseStorageTypeCorrect(t *testing.T) {
 		{"ddd", "hello", "-s", "inmemory", "asdads"},
 	}
 	expected := []string{
+		Postgres,
+		Postgres,
 		Postgres,
 		Postgres,
 		Postgres,
@@ -37,6 +41,7 @@ func TestParseStorageTypeCorrect(t *testing.T) {
 
 func TestParseStorageTypeNotCorrect(t *testing.T) {
 	args := [][]string{
+
 		{"-s", "postgresql"},
 		{"-s", "-s", "inmemory", "asdda"},
 		{"-s", "asdads", "inmemory"},
