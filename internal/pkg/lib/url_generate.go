@@ -38,19 +38,6 @@ func generateLinkLinear(length int, symbols []rune) string {
 	return string(result)
 }
 
-// GenerateLinkStrBuilderWOLEN Создает строку через билдер, а не конкатенацию рун без лен
-// Deprecated
-func generateLinkStrBuilderWOLEN(length int, symbols []rune) string {
-	var builder strings.Builder
-	builder.Grow(length)
-
-	for range length {
-		builder.WriteRune(symbols[rand.Intn(len(symbols))])
-	}
-
-	return builder.String()
-}
-
 // generateLinkParallel создает руны в горутинах
 // генерирует случайную строку длины length из пула символов symbols
 //

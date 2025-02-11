@@ -43,15 +43,8 @@ func TestSpeed(t *testing.T) {
 			_ = arr
 		}
 		end = time.Now()
-		strBuilder := end.Sub(start).Nanoseconds() / 1_000_000
+		strBuilderTime := end.Sub(start).Nanoseconds() / 1_000_000
 
-		start = time.Now()
-		for i := 0; i < 600_000; i++ {
-			arr := generateLinkStrBuilderWOLEN(length, symbols)
-			_ = arr
-		}
-		end = time.Now()
-		build2 := end.Sub(start).Nanoseconds() / 1_000_000
 		/*
 			//Parallel rune concat
 			start = time.Now()
@@ -60,47 +53,29 @@ func TestSpeed(t *testing.T) {
 				_ = arr
 			}
 			end = time.Now()
-			parallelRune := end.Sub(start).Nanoseconds() / 1_000_000
+			parallelRuneTime := end.Sub(start).Nanoseconds() / 1_000_000
 		*/
-		fmt.Println(linearTime, strBuilder, build2)
+		fmt.Println(linearTime, strBuilderTime)
 	}
 	//средние показатели в миллисекундах
-	//296 179 172 6854
-	//282 198 186 6383
-	//351 178 160 6241 параллельность проиграла без шансов далее без нее
+	//296 179 6854
+	//282 198 6383
+	//351 178 6241 параллельность проиграла без шансов далее без нее
 	/*
-	   373 441 467
-	   395 219 212
-	   325 194 178
-	   266 195 182
-	   255 179 186
-	   254 180 203
-	   253 195 267
-	   313 197 185
-	   245 198 186
-	   252 192 187
-	   301 218 178
-	   277 202 243
-	   274 189 231
-	   358 223 223
-	   272 203 195
-	   254 166 178
-	   279 226 264
-	   279 159 183
-	   277 198 173
-	   254 250 198
-	   252 166 169
-	   303 179 190
-	   256 195 185
-	   251 200 189
-	   254 185 177
-	   242 182 175
-	   272 173 162
-	   239 171 171
-	   242 183 166
-	   255 203 164
+		242 171
+		237 159
+		228 153
+		226 152
+		218 166
+		233 152
+		230 169
+		229 151
+		225 189
+		214 170
+		223 159
+		230 174
 	*/
 	//хитрыми вычислениями питона и пандаса получаем
-	//Среднее: 277.40, 202.03, 202.23
+	//Среднее: 227.92, 163.75, 6492.66
 	//Три метода помечаю как устаревшие, оставляем только GenerateLinkStrBuilder
 }
