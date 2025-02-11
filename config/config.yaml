@@ -13,4 +13,4 @@ url_generator:
   allowed_symbols: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 
 db:
-  dsn: host=db port=6543 user=ozon password=root dbname=ush_db sslmode=disable
+  dsn: host=localhost port=6543 user=ozon password=root dbname=ush_db sslmode=disable
