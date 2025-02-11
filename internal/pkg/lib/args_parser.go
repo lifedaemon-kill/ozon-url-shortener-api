@@ -1,31 +1,32 @@
 package lib
 
 import (
-	"errors"
-	"fmt"
+	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/pkg/internal_errors"
 )
 
-// ParseStorageType парсит аргументы и ищет тег -s
-// и возвращает следующее слово, если оно соответствует константе
-// ЕСЛИ ТЕГ НЕ НАЙДЕН, ВОЗВРАЩАЕТ POSTGRES
 const (
-	postgres = "postgres"
-	memory   = "memory"
+	Postgres = "postgres"
+	InMemory = "inmemory"
 )
 
+// ParseStorageType ищет тэг -s и следующее за ним слово,
+// Если оно соответствует константам, возвращает его, иначе ошибка: ierrors.UnknownStorageType
+//
+// Константы: Postgres / InMemory
+//
+// В случае если тэга -s нет, по умолчанию возвращает Postgres
 func ParseStorageType(args []string) (storageType string, err error) {
 	for i := range args[:len(args)-1] {
-		fmt.Println(i, args[i])
 		if args[i] == "-s" {
 			switch args[i+1] {
-			case postgres:
-				return postgres, nil
-			case memory:
-				return memory, nil
+			case Postgres:
+				return Postgres, nil
+			case InMemory:
+				return InMemory, nil
 			default:
-				return "", errors.New("unknown storage type")
+				return "", ierrors.UnknownStorageType
 			}
 		}
 	}
-	return postgres, nil
+	return Postgres, nil
 }
