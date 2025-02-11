@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/joho/godotenv"
 	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/pkg/config"
 	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/pkg/lib"
 	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/pkg/logger"
@@ -19,10 +18,6 @@ import (
 const configPath = "config/config.yaml"
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		return
-	}
 	conf := config.Load(configPath)
 	log := logger.SetUpLogger(conf.ENV)
 
@@ -48,7 +43,6 @@ func main() {
 		return
 	}
 
-	os.Exit(0)
 	urlService := service.New(conf.URLGenerator, repo, log)
 	h := http_server.NewHandler(log, urlService)
 	r := http_server.NewGinRouter(conf.ENV, h, log)

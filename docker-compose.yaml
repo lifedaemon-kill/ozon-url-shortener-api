@@ -1,4 +1,5 @@
 services:
+
   app:
     build: ./
     ports:
@@ -8,7 +9,7 @@ services:
     depends_on:
       - db
     environment:
-      - POSTGRES_DSN="host=db port=6543 user=ozon password=root dbname=ush_db sslmode=disable" #EXAMPLE
+      - POSTGRES_DSN="host=db port=6543 user=ozon password=root dbname=ush_db sslmode=disable"
 
   db:
     image: postgres:latest
@@ -16,10 +17,10 @@ services:
       - pgdata:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=ush_db
-      - POSTGRES_USER=ozon    #EXAMPLE
-      - POSTGRES_PASSWORD=root   #EXAMPLE
+      - POSTGRES_USER=ozon
+      - POSTGRES_PASSWORD=root
     ports:
       - "6543:5432"
 
 volumes:
-  pgdata: {}
+  pgdata:
