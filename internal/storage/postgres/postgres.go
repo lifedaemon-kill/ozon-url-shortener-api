@@ -30,7 +30,7 @@ func (p *postgres) SaveURL(ctx context.Context, sourceURL, aliasURL string) erro
 	query := `
 		INSERT INTO urls (sourceURL, aliasURL) 
 		VALUES ($1, $2)
-		ON CONFLICT (sourceURL)
+		ON CONFLICT (sourceURL) DO NOTHING;
 		`
 
 	result, err := p.db.ExecContext(ctx, query, sourceURL, aliasURL)
