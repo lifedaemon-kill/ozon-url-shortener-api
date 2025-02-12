@@ -18,13 +18,15 @@ type service struct {
 	repo      storage.Storage
 	log       *slog.Logger
 	genConfig config.URLGenerator
+	host      string
 }
 
-func New(conf config.URLGenerator, repo storage.Storage, log *slog.Logger) UrlShortener {
+func New(conf config.URLGenerator, repo storage.Storage, host string, log *slog.Logger) UrlShortener {
 	return &service{
 		repo:      repo,
 		log:       log,
 		genConfig: conf,
+		host:      host,
 	}
 }
 
@@ -58,5 +60,5 @@ func (s *service) FetchSource(aliasURL string) (sourceURL string, err error) {
 	if err != nil {
 		return "", err
 	}
-	return source, nil
+	return s.host + source, nil
 }

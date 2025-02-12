@@ -21,6 +21,8 @@ func NewGinRouter(env string, handler *Handler, log *slog.Logger) *gin.Engine {
 		os.Exit(1)
 	}
 
+	//	gin.SetMode(gin.ReleaseMode)
+
 	r.POST("/link", handler.CreateAliasURL)
 	r.GET("/link", handler.FetchSourceURL)
 

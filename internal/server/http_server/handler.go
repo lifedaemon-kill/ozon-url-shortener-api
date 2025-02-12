@@ -18,16 +18,20 @@ func NewHandler(log *slog.Logger, urlService service.UrlShortener) *Handler {
 	}
 }
 
-func (h *Handler) CreateAliasURL(c *gin.Context) {
-	var url string
+type RequestData struct {
+	URL string `json:"url"`
+}
 
-	err := c.ShouldBind(&url)
+func (h *Handler) CreateAliasURL(c *gin.Context) {
+	var req RequestData
+
+	err := c.ShouldBind(&req)
 	if err != nil {
 		c.JSON(400, gin.H{"bad request": "you should send xml or json 'url' filed with data"})
 		return
 	}
 
-	alias, err := h.urlService.CreateAlias(url)
+	alias, err := h.urlService.CreateAlias(req.URL)
 	if err == nil {
 		c.JSON(200, gin.H{"url": alias})
 		return
@@ -42,15 +46,15 @@ func (h *Handler) CreateAliasURL(c *gin.Context) {
 }
 
 func (h *Handler) FetchSourceURL(c *gin.Context) {
-	var url string
+	var req RequestData
 
-	err := c.ShouldBind(&url)
+	err := c.ShouldBind(&req)
 	if err != nil {
 		c.JSON(400, gin.H{"bad request": "you should send xml or json 'url' filed with data"})
 		return
 	}
 
-	source, err := h.urlService.FetchSource(url)
+	source, err := h.urlService.FetchSource(req.URL)
 	if err == nil {
 		c.JSON(200, gin.H{"url": source})
 		return
