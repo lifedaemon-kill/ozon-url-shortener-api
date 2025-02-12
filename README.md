@@ -7,19 +7,19 @@
 # Оглавление
 
 1. [Запуск](#запуск)
-2. [Описание API](#Описание-API)
-3. [REST API](#rest-api)
-    - [Эндпоинты](#эндпоинты)
-4. [gRPC API](#grpc-api)
-    - [Сервис URLService](#сервис-urlservice)
-    - [Структуры](#структуры)
-5. [Protobuf](#protobuf)
-6. [Миграции](#миграции)
-7. [Хранилище](#хранилище)
-8. [Генерация URL](#генерация-url)
+2. [Описание API](#описание-api)
+    - [REST API](#rest-api)
+        - [Эндпоинты](#эндпоинты)
+    - [gRPC API](#grpc-api)
+        - [Сервис URLService](#сервис-urlservice)
+        - [Структуры](#структуры)
+3. [Protobuf](#protobuf)
+4. [Миграции](#миграции)
+5. [Хранилище](#хранилище)
+6. [Генерация URL](#генерация-url)
     - [Методы](#методы)
     - [Среднее время выполнения](#среднее-время-выполнения)
-9. [Пример работы](#пример-работы)
+7. [Пример работы](#пример-работы)
 
 ---
 
@@ -29,15 +29,15 @@
 
 Желательно в файле поменять пароли на более устойчивые
 
+---
 ## Описание API
 
-Поддерживаются два апи
+Поддерживаются два сервиса
+REST и gRPC
 
-## REST
+## 1. REST
 
-### port: `8080`
-
----
+ port: `8080`
 
 ### Доступны эндпоинты
 
@@ -55,30 +55,27 @@
    ```
 2. `POST /link`
 
-   Принимает header
-
-   `"X-URL" : string`
+   Принимает header `"X-URL" : string`
 
 Возвращает application/json
 
-   ```json
-   {
+```json
+{
   "url": "string"
 }
-   ```
+```
 
-## GRPC
+## 2. GRPC
+port: `8090`
 
-### port: `8090`
-
-### Сервис URLService
+### URLService
 
 #### Методы
 
 1. `rpc SaveURL(SaveURLRequest) returns (SaveURLResponse);`
 2. `rpc FetchURL(FetchURLRequest) returns (FetchURLResponse);`
 
-#### Структуры
+### Структуры
 
 ```
 message SaveURLRequest {
@@ -86,7 +83,7 @@ string source_URL = 1;
 }
 
 message SaveURLResponse{
-string alias_URL = 2;
+string alias_URL = 1;
 }
 
 message FetchURLRequest {
