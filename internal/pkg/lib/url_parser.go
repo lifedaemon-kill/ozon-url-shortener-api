@@ -5,8 +5,11 @@ import (
 )
 
 func IsURL(link string) bool {
-	_, err := url.Parse(link)
+	p, err := url.Parse(link)
 	if err != nil {
+		return false
+	}
+	if p.Scheme != "http" && p.Scheme != "https" {
 		return false
 	}
 	return true

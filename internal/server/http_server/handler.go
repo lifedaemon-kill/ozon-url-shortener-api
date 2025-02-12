@@ -22,34 +22,34 @@ func NewHandler(log *slog.Logger, urlService service.UrlShortener) *Handler {
 	}
 }
 
-type URL struct {
-	Value string `json:"url"`
-}
-
 func (h *Handler) CreateAliasURL(c *gin.Context) {
 
 	ctx, cancel := context.WithTimeout(c, 15*time.Second)
 	defer cancel()
-	var req URL
 
-	err := c.ShouldBind(&req)
-	if err != nil {
-		h.log.Error("http_server.CreateAliasURL", "err", err.Error())
+	req := c.GetHeader("X-URL")
+
+	if req == "" {
+		h.log.Error("http_server.CreateAliasURL", "err", "no X-URL header")
 		c.JSON(400, gin.H{"bad request": "you should send xml or json 'url' filed with data"})
 		return
 	}
-	h.log.Debug("start http_server.CreateAliasURL", "url", req.Value)
+	h.log.Debug("start http_server.CreateAliasURL", "url", req)
 
-	alias, err := h.urlService.CreateAlias(ctx, req.Value)
+	alias, err := h.urlService.CreateAlias(ctx, req)
 	if err == nil {
-		h.log.Debug("http_server.CreateAliasURL success", "url", req.Value)
+		h.log.Debug("http_server.CreateAliasURL success", "url", req)
 		c.JSON(200, gin.H{"url": alias})
 		return
 	}
 	if errors.Is(err, ierrors.InvalidURL) {
-		h.log.Error("http_server.CreateAliasURL failed Invalid URL", "url", req.Value)
+		h.log.Error("http_server.CreateAliasURL failed Invalid URL", "url", req)
 		c.JSON(400, gin.H{"bad request": "url not match pattern "})
 		return
+	}
+	if errors.Is(err, ierrors.SourceAlreadyExist) {
+		h.log.Warn("http_server.CreateAliasURL failed SourceAlreadyExist", "url", req)
+		c.JSON(400, gin.H{"bad request": "source already exists"})
 	} else {
 		h.log.Error("http_server.CreateAliasURL failed", "err", err)
 		c.JSON(500, gin.H{"error": "internal error"})
@@ -60,18 +60,18 @@ func (h *Handler) CreateAliasURL(c *gin.Context) {
 func (h *Handler) FetchSourceURL(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c, 15*time.Second)
 	defer cancel()
-	var req URL
+	req := c.GetHeader("X-URL")
 
-	err := c.ShouldBind(&req)
-	if err != nil {
-		h.log.Error("http_server.FetchSourceURL", "err", err.Error())
+	if req == "" {
+		h.log.Error("http_server.FetchSourceURL", "err", "no X-URL header")
 		c.JSON(400, gin.H{"bad request": "you should send xml or json 'url' filed with data"})
 		return
 	}
+	h.log.Debug("http_server.FetchSourceURL after binding", "url", req)
 
-	source, err := h.urlService.FetchSource(ctx, req.Value)
+	source, err := h.urlService.FetchSource(ctx, req)
 	if err == nil {
-		h.log.Debug("http_server.FetchSourceURL success", "url", req.Value)
+		h.log.Debug("http_server.FetchSourceURL success", "url", req)
 		c.JSON(200, gin.H{"url": source})
 		return
 	} else {

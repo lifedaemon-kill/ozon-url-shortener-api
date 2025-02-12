@@ -13,6 +13,7 @@ import (
 	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/storage/inmemory"
 	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/storage/postgres"
 	"google.golang.org/grpc"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -65,14 +66,23 @@ func main() {
 	defer cancel()
 
 	//grpc
+
 	go func() {
-		<-ctx.Done()
-		log.Info("shutting down API gRPC server")
-		grpcServer.GracefulStop()
+		lis, err := net.Listen("tcp", conf.GRPC.Address)
+		if err != nil {
+			log.Error("Failed to listen: %v", err)
+			return
+		}
+		log.Info("grpc server listening on", "address", conf.GRPC.Address)
+		if err := grpcServer.Serve(lis); err != nil {
+			log.Error("gRPC server failed: %v", err)
+			return
+		}
 	}()
 
 	//http
 	go func() {
+		log.Info("http server listening on", "address", conf.Http.Address)
 		if err = httpServer.ListenAndServe(); err != nil {
 			log.Error("http server error", "error", err)
 		}
@@ -90,5 +100,11 @@ func main() {
 	if err = httpServer.Shutdown(ctx); err != nil {
 		log.Error("shutdown server error", "error", err)
 	}
+	go func() {
+		<-ctx.Done()
+		log.Info("shutting down API gRPC server")
+		grpcServer.GracefulStop()
+	}()
+
 	log.Info("shutdown complete")
 }

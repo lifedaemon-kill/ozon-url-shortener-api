@@ -8,6 +8,8 @@ import (
 	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/pkg/lib"
 	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/storage"
 	"log/slog"
+	"net/url"
+	"strings"
 )
 
 type UrlShortener interface {
@@ -61,7 +63,7 @@ func (s *service) CreateAlias(ctx context.Context, sourceURL string) (string, er
 		}
 
 		s.log.Debug("end service.CreateAlias", "sourceURL", sourceURL, "alias", alias)
-		return alias, nil
+		return s.host + alias, nil
 	}
 	//Иначе что-то отвалилось в бд...
 	s.log.Error("end service.CreateAlias was failed", "err", err)
@@ -71,11 +73,22 @@ func (s *service) CreateAlias(ctx context.Context, sourceURL string) (string, er
 func (s *service) FetchSource(ctx context.Context, aliasURL string) (sourceURL string, err error) {
 	s.log.Debug("start service.FetchSource", "alias", aliasURL)
 
-	source, err := s.repo.FetchURL(ctx, aliasURL)
+	parsedURL, err := url.Parse(aliasURL)
+	if err != nil {
+		s.log.Error("end service.FetchSource was failed", "err", err)
+		return "", err
+	}
+
+	host := parsedURL.Scheme + "://" + parsedURL.Host + "/"
+
+	req := strings.TrimPrefix(aliasURL, host)
+	s.log.Debug("service.FetchSource del host", "req", req, aliasURL, host)
+
+	source, err := s.repo.FetchURL(ctx, req)
 	if err != nil {
 		s.log.Error("end service.CreateAlias was failed", "err", err)
 		return "", err
 	}
 	s.log.Debug("end service.FetchSource", "sourceURL", source, "alias", aliasURL)
-	return s.host + source, nil
+	return source, nil
 }
