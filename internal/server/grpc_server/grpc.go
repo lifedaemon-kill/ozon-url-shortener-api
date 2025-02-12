@@ -31,14 +31,14 @@ func (s *urlService) SaveURL(ctx context.Context, req *pb.SaveURLRequest) (*pb.S
 	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 
-	alias, err := s.service.CreateAlias(ctx, req.Source_URL)
+	alias, err := s.service.CreateAlias(ctx, req.SourceUrl)
 	if err != nil {
 		s.log.Error("grpc.SaveURL", "err", err)
 		return nil, err
 	}
 
 	s.log.Debug("grpc.SaveURL success", "alias", alias)
-	return &pb.SaveURLResponse{Alias_URL: alias}, nil
+	return &pb.SaveURLResponse{AliasUrl: alias}, nil
 }
 
 func (s *urlService) FetchURL(ctx context.Context, req *pb.FetchURLRequest) (*pb.FetchURLResponse, error) {
@@ -47,11 +47,11 @@ func (s *urlService) FetchURL(ctx context.Context, req *pb.FetchURLRequest) (*pb
 	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 
-	source, err := s.service.FetchSource(ctx, req.Alias_URL)
+	source, err := s.service.FetchSource(ctx, req.AliasUrl)
 	if err != nil {
 		s.log.Error("grpc.FetchURL", "err", err)
 		return nil, err
 	}
 	s.log.Debug("grpc.FetchURL success", "source", source)
-	return &pb.FetchURLResponse{Source_URL: source}, nil
+	return &pb.FetchURLResponse{SourceUrl: source}, nil
 }

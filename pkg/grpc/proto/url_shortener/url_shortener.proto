@@ -10,17 +10,17 @@ service URLService {
 }
 
 message SaveURLRequest {
-  string source_URL = 1;
+  string source_url = 1;
 }
 
 message SaveURLResponse{
-  string alias_URL = 2;
+  string alias_url = 1;
 }
 
 message FetchURLRequest {
-  string alias_URL = 1;
+  string alias_url = 1;
 }
 
 message FetchURLResponse {
-  string source_URL = 1;
+  string source_url = 1;
 }
