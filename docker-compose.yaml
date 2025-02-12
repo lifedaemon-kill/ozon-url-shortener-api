@@ -1,24 +1,29 @@
 services:
-
-  app:
-    build: ./
-    ports:
-      - "8080:8080"
-      - "8090:8090"
-
-    depends_on:
-      - db
-
   db:
     image: postgres:latest
     volumes:
       - pgdata:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=ush_db
-      - POSTGRES_USER=ozon
-      - POSTGRES_PASSWORD=root
+      POSTGRES_DB: "ush_db"
+      POSTGRES_USER: "ozon"
+      POSTGRES_PASSWORD: "root"
     ports:
-      - "6543:5432"
+      - "5432:5432"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ENV=local
+    ports:
+      - "8080:8080"
+      - "8090:8090"
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    command: go run cmd/server/main.go -s postgres
 
 volumes:
   pgdata:

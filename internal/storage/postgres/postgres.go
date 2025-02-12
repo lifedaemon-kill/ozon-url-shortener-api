@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/pkg/config"
@@ -17,7 +18,7 @@ type postgres struct {
 }
 
 func New(conf config.DB) (storage.Storage, error) {
-	db, err := sqlx.Connect("postgres", conf.DSN)
+	db, err := sqlx.Connect("postgres", fmt.Sprintf(conf.DSN))
 	if err != nil {
 		return nil, err
 	}
