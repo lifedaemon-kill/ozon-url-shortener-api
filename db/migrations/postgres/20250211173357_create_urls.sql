@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS urls
 (
     id         SERIAL PRIMARY KEY,
     source_url TEXT NOT NULL UNIQUE,
-    alias_url  TEXT NOT NULL
+    alias_url  TEXT NOT NULL UNIQUE
 );
 
 CREATE INDEX indx_urls_alias_url on urls (alias_url);

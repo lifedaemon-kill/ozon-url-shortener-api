@@ -8,4 +8,7 @@ var NoSuchValue = errors.New("no such url")
 // UnknownStorageType used in Main args parser
 var UnknownStorageType = errors.New("unknown storage type")
 
-var ValueAlreadyExist = errors.New("value already exist")
+var SourceAlreadyExist = errors.New("source already exist")
+var AliasAlreadyExist = errors.New("alias already exist")
+
+var InvalidURL = errors.New("invalid url")

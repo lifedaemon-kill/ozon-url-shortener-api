@@ -1,6 +1,7 @@
 package inmemory
 
 import (
+	"context"
 	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/pkg/internal_errors"
 	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/storage"
 	"sync"
@@ -20,30 +21,43 @@ func New() storage.Storage {
 	}
 }
 
-// SaveURL if url already exist, then method should return ierror.ValueAlreadyExist
-func (i *inMemoryStorage) SaveURL(sourceURL, aliasURL string) error {
-	i.mu.Lock()
-	res := i.sourceToAlias[sourceURL]
-	if res != "" {
-		i.mu.Unlock()
-		return ierrors.ValueAlreadyExist
+// SaveURL если ссылка уже существует, возвращает ошибку ierror.SourceAlreadyExist
+func (i *inMemoryStorage) SaveURL(ctx context.Context, sourceURL, aliasURL string) error {
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	default:
 	}
+
+	i.mu.Lock()
+	defer i.mu.Unlock()
+
+	_, exist := i.sourceToAlias[sourceURL]
+	if exist {
+		return ierrors.SourceAlreadyExist
+	}
+
 	i.sourceToAlias[sourceURL] = aliasURL
 	i.aliasToSource[aliasURL] = sourceURL
-	i.mu.Unlock()
 
 	return nil
 }
 
-// FetchURL if no such url, then method should return ierror.NoSuchValue
-func (i *inMemoryStorage) FetchURL(aliasURL string) (string, error) {
+// FetchURL если не такой ссылки, то возвращает ierror.NoSuchValue
+func (i *inMemoryStorage) FetchURL(ctx context.Context, aliasURL string) (string, error) {
+	select {
+	case <-ctx.Done():
+		return "", ctx.Err()
+	default:
+	}
+
 	i.mu.Lock()
-	source := i.aliasToSource[aliasURL]
-	if source == "" {
-		i.mu.Unlock()
+	defer i.mu.Unlock()
+
+	source, exist := i.aliasToSource[aliasURL]
+	if !exist {
 		return "", ierrors.NoSuchValue
 	}
-	i.mu.Unlock()
 
 	return source, nil
 }

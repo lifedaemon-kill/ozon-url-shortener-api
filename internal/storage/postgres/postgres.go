@@ -10,7 +10,6 @@ import (
 	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/pkg/config"
 	ierrors "github.com/lifedaemon-kill/ozon-url-shortener-api/internal/pkg/internal_errors"
 	"github.com/lifedaemon-kill/ozon-url-shortener-api/internal/storage"
-	"time"
 )
 
 type postgres struct {
@@ -26,21 +25,34 @@ func New(conf config.DB) (storage.Storage, error) {
 		db: db,
 	}, nil
 }
-func (p *postgres) SaveURL(sourceURL, aliasURL string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	query := `INSERT INTO urls (sourceURL, aliasURL) VALUES ($1, $2)`
 
-	_, err := p.db.ExecContext(ctx, query, sourceURL, aliasURL)
+func (p *postgres) SaveURL(ctx context.Context, sourceURL, aliasURL string) error {
+	query := `
+		INSERT INTO urls (sourceURL, aliasURL) 
+		VALUES ($1, $2)
+		ON CONFLICT (sourceURL)
+		`
+
+	result, err := p.db.ExecContext(ctx, query, sourceURL, aliasURL)
 	if err != nil {
 		return err
 	}
+
+	// Проверяем, была ли вставка успешной
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	// Если rowsAffected == 0, значит запись уже существует
+	if rowsAffected == 0 {
+		return ierrors.SourceAlreadyExist
+	}
+
 	return nil
 }
 
-func (p *postgres) FetchURL(aliasURL string) (sourceURL string, err error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+func (p *postgres) FetchURL(ctx context.Context, aliasURL string) (sourceURL string, err error) {
 	query := `SELECT sourceURL FROM urls WHERE aliasURL=$1`
 
 	row := p.db.QueryRowContext(ctx, query, aliasURL)
