@@ -1,5 +1,5 @@
 POSTGRES_PATH:="db/migrations/postgres/"
-POSTGRES_DSN:="postgres://postgres:postgres@localhost:5432/ush_db?sslmode=disable" #EXAMPLE
+POSTGRES_DSN:="postgres://ozon:root@localhost:5432/ush_db?sslmode=disable"
 
 PG_DBNAME="ush_db"
 
