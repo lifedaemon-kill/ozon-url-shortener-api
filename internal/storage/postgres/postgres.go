@@ -28,9 +28,9 @@ func New(conf config.DB) (storage.Storage, error) {
 
 func (p *postgres) SaveURL(ctx context.Context, sourceURL, aliasURL string) error {
 	query := `
-		INSERT INTO urls (sourceURL, aliasURL) 
+		INSERT INTO urls (source_url, alias_url) 
 		VALUES ($1, $2)
-		ON CONFLICT (sourceURL) DO NOTHING;
+		ON CONFLICT (source_url) DO NOTHING;
 		`
 
 	result, err := p.db.ExecContext(ctx, query, sourceURL, aliasURL)
@@ -53,7 +53,7 @@ func (p *postgres) SaveURL(ctx context.Context, sourceURL, aliasURL string) erro
 }
 
 func (p *postgres) FetchURL(ctx context.Context, aliasURL string) (sourceURL string, err error) {
-	query := `SELECT sourceURL FROM urls WHERE aliasURL=$1`
+	query := `SELECT source_url FROM urls WHERE alias_url=$1`
 
 	row := p.db.QueryRowContext(ctx, query, aliasURL)
 	err = row.Scan(&sourceURL)
