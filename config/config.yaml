@@ -1,10 +1,10 @@
 env: local
 
 http_server:
-  address: :8080
+  address: 0.0.0.0:8080
 
 grpc_server:
-  address: :8090
+  address: 0.0.0.0:8090
 
 short_links_address: "http://graceful.link.shortener/"
 

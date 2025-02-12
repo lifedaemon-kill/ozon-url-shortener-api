@@ -66,7 +66,6 @@ func main() {
 	defer cancel()
 
 	//grpc
-
 	go func() {
 		lis, err := net.Listen("tcp", conf.GRPC.Address)
 		if err != nil {
