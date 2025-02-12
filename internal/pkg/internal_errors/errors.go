@@ -9,6 +9,5 @@ var NoSuchValue = errors.New("no such url")
 var UnknownStorageType = errors.New("unknown storage type")
 
 var SourceAlreadyExist = errors.New("source already exist")
-var AliasAlreadyExist = errors.New("alias already exist")
 
 var InvalidURL = errors.New("invalid url")
